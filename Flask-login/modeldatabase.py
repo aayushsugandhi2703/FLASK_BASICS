@@ -1,6 +1,6 @@
-from flask import SQLAlchemy
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Table, primary_key
-from sqlalchemy.orm import relationship, Sessionmaker, Session, Metadata, declarative_base
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Table
+from sqlalchemy.orm import relationship, sessionmaker, Session, declarative_base
 
 engine = create_engine("sqlite:///datdabase.db")
 
@@ -13,7 +13,7 @@ class Userdata(Base):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(60), nullable=False)
 
-Session = Sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine)
 
 Base.metadata.create_all(engine)
 
