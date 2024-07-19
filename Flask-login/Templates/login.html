@@ -1,0 +1,23 @@
+{% extends "index.html" }
+{% block title %}Login{% endblock %}
+{% block content %}
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.username.label }}
+            {{ form.username }}
+            {% for form.username.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.password.label }}
+            {{ form.password }}
+            {% for form.password.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </form>
+    
+{% endblock %}
