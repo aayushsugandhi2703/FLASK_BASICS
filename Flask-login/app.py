@@ -8,23 +8,16 @@ import os
 # Create Flask app instance
 app = Flask(__name__)
 
-# Configure database connection (replace with your actual connection string)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-
-# Suppress SQLAlchemy modification tracking warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Set a secret key for session management (replace with a strong random string)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
 # Create a database session
 session = Session()
 
-# Initialize Flask-Login
-login_manager = LoginManager(app)
+login_manager = LoginManager(app)      # Initialize Flask-Login
+login_manager.login_view = 'login'          # Set the login view (page to redirect to for unauthorized access)
 
-# Set the login view (page to redirect to for unauthorized access)
-login_manager.login_view = 'login'
 
 # Define user loader function for Flask-Login (loads user by ID)
 @login_manager.user_loader
@@ -41,8 +34,13 @@ def index():
 def Signup():
     form = register()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        user = Userdata(username=form.username.data, email=form.email.data, password=hashed_password)
+        # Check if email already exists
+        existing_user = session.query(Userdata).filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email address already in use. Please choose a different one.', 'danger')
+            return render_template('signup.html', title='Signup', form=form)
+        
+        user = Userdata(username=form.username.data, email=form.email.data, password=form.password.data)
         session.add(user)
         session.commit()
         flash(f'Account created for {form.username.data}!', 'success')
@@ -55,7 +53,7 @@ def login():  # Function name should match the route definition
     form = logins()
     if form.validate_on_submit():
         user = session.query(Userdata).filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
+        if user and user.password == form.password.data:
             login_user(user)
             flash(f'Login successful!', 'success')
             return redirect(url_for('index'))
