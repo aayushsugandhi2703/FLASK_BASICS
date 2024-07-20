@@ -29,6 +29,11 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
+@app.route('/new')
+@login_required
+def new():
+    return render_template('new.html')
+
 # Route for signup (assumes 'register' function creates a form)
 @app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
@@ -44,7 +49,7 @@ def Signup():
         session.add(user)
         session.commit()
         flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('Signup'))  # Redirect to login after signup
+        return redirect(url_for('login'))  # Redirect to login after signup
     return render_template('Signup.html', title='Signup', form=form)
 
 # Route for login (corrected typo, assumes 'login' function creates a form)
@@ -56,7 +61,7 @@ def login():  # Function name should match the route definition
         if user and user.password == form.password.data:
             login_user(user)
             flash(f'Login successful!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('new'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
