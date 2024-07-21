@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash
 from model import register, logins  # Assuming these functions define forms
 from modeldatabase import Userdata, Session
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
@@ -73,6 +73,15 @@ def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('login'))
+
+# Route for admin panel with login required
+@app.route('/admin')
+@login_required
+def admin():
+    print(f'Current user: {current_user.username}')
+    if current_user.email == 'aayush@gmail.com':
+        return 'Welcome to the admin panel, ' + current_user.username
+    return 'Access denied', 403
 
 # Run the Flask app in debug mode (not recommended for production)
 if __name__ == '__main__':
