@@ -39,7 +39,7 @@ class Movie(Resource):
         args = movie.parse_args()
         movies[movie_id] = {
             'movie_id': movie_id,
-            'name': args['name'],
+            'name': args['name'],   
             'likes': args['likes']
         }
         return movies[movie_id], 201  # Status code 201 for creation
