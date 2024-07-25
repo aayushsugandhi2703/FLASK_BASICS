@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home{% endblock %}</title>
+</head>
+<body>
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('Signup') }}">Signup</a>
+
+    {% block content %}
+    <!-- Default content goes here -->
+    {% endblock %}
+</body>
+</html>
