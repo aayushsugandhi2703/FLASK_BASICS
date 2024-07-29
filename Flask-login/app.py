@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash
-from model import register, logins  # Assuming these functions define forms
+from model import register, logins 
 from modeldatabase import Userdata, Session
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,7 +24,7 @@ login_manager.login_view = 'login'          # Set the login view (page to redire
 def load_user(user_id):
     return session.query(Userdata).get(int(user_id))
 
-# Route for the main page (replace with your actual content)
+# Route for the main page
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -34,7 +34,7 @@ def index():
 def new():
     return render_template('new.html')
 
-# Route for signup (assumes 'register' function creates a form)
+# Route for signup ('register' function creates a form)
 @app.route('/Signup', methods=['GET', 'POST'])
 def Signup():
     form = register()
@@ -52,7 +52,7 @@ def Signup():
         return redirect(url_for('login'))  # Redirect to login after signup
     return render_template('Signup.html', title='Signup', form=form)
 
-# Route for login (corrected typo, assumes 'login' function creates a form)
+# Route for login ( 'login' function creates a form)
 @app.route('/Login', methods=['GET', 'POST'])  # Corrected route definition
 def login():  # Function name should match the route definition
     form = logins()
@@ -83,6 +83,5 @@ def admin():
         return 'Welcome to the admin panel, ' + current_user.username
     return 'Access denied', 403
 
-# Run the Flask app in debug mode (not recommended for production)
 if __name__ == '__main__':
     app.run(debug=True)
